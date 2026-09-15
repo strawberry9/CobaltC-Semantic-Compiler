@@ -1,0 +1,24 @@
+module struct_dereferences;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn clone(Point* source) : Point {
+    return *source;
+}
+
+fn replace(mut Point* destination, Point value) : void {
+    *destination = move value;
+}
+
+fn main() : i32 {
+    mut Point point = Point { x = 3, y = 5 };
+    Point saved = clone(&point);
+    replace(&mut point, Point { x = 7, y = 9 });
+    mut Point* pointer = &mut point;
+    *pointer = *pointer;
+    Point copied = *pointer;
+    return saved.x + copied.y;
+}

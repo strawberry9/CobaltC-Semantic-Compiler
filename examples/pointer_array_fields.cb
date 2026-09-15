@@ -1,0 +1,16 @@
+module pointer_array_fields;
+
+struct Data { i32[2] values; i32 tag; }
+
+fn select(Data* value, i32 index) : i32* {
+    return &value->values[index];
+}
+
+fn update(i32 index) : i32 {
+    mut Data data = Data { values=[10,20], tag=3 };
+    mut Data* ptr = &mut data;
+    ptr->values[index] = 7;
+    i32* item = &ptr->values[index];
+    ptr->tag = 9;
+    return *item;
+}

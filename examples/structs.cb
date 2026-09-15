@@ -1,0 +1,18 @@
+module examples.structs;
+export { Point; shifted_sum; }
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn shifted_sum() : i32
+{
+    Point original = Point { x = 10, y = 20 };
+    mut Point shifted;
+    shifted.x = original.x + 1;
+    // Only shifted.x is initialized at this point.
+    shifted.y = original.y;
+    return shifted.x + shifted.y;
+}

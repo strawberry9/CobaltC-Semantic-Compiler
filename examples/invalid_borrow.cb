@@ -1,0 +1,9 @@
+module examples.invalid_borrow;
+
+fn conflict() : i32
+{
+    mut i32 value = 7;
+    i32* pointer = &value;
+    value = 9; // Invalid: pointer is still needed below.
+    return *pointer;
+}

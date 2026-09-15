@@ -1,0 +1,25 @@
+module managed_pointer_moves;
+
+struct Point { i32 x; i32 y; }
+
+fn run() : i32 {
+    mut i32 value = 7;
+    mut i32* scalar = &mut value;
+    i32 old_value = move *scalar;
+    *scalar = 9;
+
+    mut Point point = Point { x=3,y=4 };
+    mut Point* whole = &mut point;
+    Point old_point = move *whole;
+    *whole = Point { x=5,y=6 };
+
+    i32 old_x = move whole->x;
+    whole->x = 8;
+
+    mut i32[2] values = [1,2];
+    mut i32[2]* array = &mut values;
+    i32[2] old_values = move *array;
+    *array = [5,6];
+    i32[2] current_values = *array;
+    return old_value + old_point.y + old_x + whole->x + old_values[1] + current_values[0];
+}

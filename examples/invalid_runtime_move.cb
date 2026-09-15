@@ -1,0 +1,7 @@
+module invalid_runtime_move;
+
+fn take(i32 index) : i32 {
+    i32[2] values = [10, 20];
+    i32 taken = move values[index];
+    return values[0];
+}

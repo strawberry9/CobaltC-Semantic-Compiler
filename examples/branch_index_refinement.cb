@@ -1,0 +1,10 @@
+module branch_index_refinement;
+
+fn selected(i32 index):i32 {
+    mut i32[2] values;
+    values[0] = 7;
+    if index == 0 {
+        return values[index];
+    }
+    return 0;
+}

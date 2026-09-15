@@ -1,0 +1,28 @@
+module struct_calls;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn make(i32 x, i32 y) : Point {
+    return Point { x = x, y = y };
+}
+
+fn update(Point input) : Point {
+    mut Point local = move input;
+    local.x = local.x + 1;
+    return move local;
+}
+
+fn total(Point point) : i32 {
+    return point.x + point.y;
+}
+
+fn main() : i32 {
+    Point original = make(3, 5);
+    Point changed = update(original);
+    i32 first = total(original);
+    i32 second = total(move changed);
+    return first + second;
+}

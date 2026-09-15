@@ -1,0 +1,20 @@
+module multidimensional_arrays;
+
+fn update() : i32 {
+    mut i32[2][3] grid = [[1,2,3],[4,5,6]];
+    i32 taken = move grid[0][0];
+    grid[0][0] = 9;
+    i32[3] row = move grid[1];
+    grid[1] = row;
+    i32[2][3] copied = grid;
+    return taken + copied[1][2];
+}
+
+fn borrow_cells() : i32 {
+    mut i32[2][2] grid = [[1,2],[3,4]];
+    mut i32* first = &mut grid[0][0];
+    mut i32* second = &mut grid[1][1];
+    *first = 7;
+    *second = 8;
+    return *first + *second;
+}

@@ -1,0 +1,20 @@
+module runtime_array_borrows;
+
+fn identity(i32* pointer) : i32* {
+    return pointer;
+}
+
+fn read_selected(i32 index) : i32 {
+    i32[3] values = [10, 20, 30];
+    i32* selected = identity(&values[index]);
+    return *selected;
+}
+
+fn update_selected(i32 index) : i32 {
+    mut i32[3] values = [10, 20, 30];
+    mut i32* selected = &mut values[index];
+    i32* view = &*selected;
+    i32 previous = *view;
+    *selected = 7;
+    return previous;
+}

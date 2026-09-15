@@ -1,0 +1,15 @@
+module invalid_struct_argument;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn consume(Point point) : void {}
+
+fn main() : i32 {
+    Point point = Point { x = 1, y = 2 };
+    i32 taken = move point.x;
+    consume(move point);
+    return taken;
+}

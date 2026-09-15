@@ -1,0 +1,22 @@
+module runtime_multidimensional_arrays;
+
+fn update(i32 row, i32 column) : i32 {
+    mut i32[2][3] grid = [[1,2,3],[4,5,6]];
+    grid[row][column] = 9;
+    return grid[row][column];
+}
+
+fn move_cell(i32 column) : i32 {
+    mut i32[2][3] grid = [[1,2,3],[4,5,6]];
+    i32 taken = move grid[0][column];
+    return taken + grid[1][0];
+}
+
+fn borrow_column(i32 column) : i32 {
+    mut i32[2][3] grid = [[1,2,3],[4,5,6]];
+    mut i32* top = &mut grid[0][column];
+    mut i32* bottom = &mut grid[1][column];
+    *top = 7;
+    *bottom = 8;
+    return *top + *bottom;
+}

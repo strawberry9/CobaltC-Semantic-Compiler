@@ -1,0 +1,24 @@
+module examples.partial_fields;
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn update_fields() : i32
+{
+    mut Point point = Point { x = 10, y = 20 };
+    i32 taken = move point.x;
+    i32 saved = point.y; // The sibling field remains available.
+    point.x = taken; // Restores whole-struct availability.
+
+    mut i32* left = &mut point.x;
+    mut i32* right = &mut point.y; // Disjoint mutable borrows coexist.
+    *left = 11;
+    *right = saved;
+
+    // Both field borrows have ended after their last uses.
+    Point transferred = move point;
+    return transferred.x + transferred.y;
+}

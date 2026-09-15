@@ -1,0 +1,7 @@
+module examples.invalid_initialization;
+fn broken(bool condition) : i32
+{
+    mut i32 value;
+    if condition { value = 1; }
+    return value;
+}

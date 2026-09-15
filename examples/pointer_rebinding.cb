@@ -1,0 +1,22 @@
+module pointer_rebinding;
+
+fn run(bool choose_second) : i32 {
+    mut i32 first = 1;
+    mut i32 second = 2;
+    mut i32 selected_value;
+
+    {
+        i32* mut selected = &first;
+        if choose_second {
+            selected = &second;
+        }
+        selected_value = *selected;
+    }
+
+    mut i32* mut writable = &mut first;
+    mut i32* source = &mut second;
+    writable = move source;
+    *writable = 9;
+
+    return selected_value + first + second;
+}

@@ -1,0 +1,15 @@
+module examples.invalid_field_borrow;
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn overlapping_access() : i32
+{
+    mut Point point = Point { x = 10, y = 20 };
+    i32* pointer = &point.x;
+    point = Point { x = 30, y = 40 }; // Invalid: replacement overlaps the live field borrow.
+    return *pointer;
+}

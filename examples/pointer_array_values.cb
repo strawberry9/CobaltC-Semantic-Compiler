@@ -1,0 +1,16 @@
+module pointer_array_values;
+
+struct Data { i32[2] values; i32 tag; }
+
+fn copy_values(Data* ptr) : i32[2] {
+    return ptr->values;
+}
+
+fn replace() : i32 {
+    mut Data data = Data { values=[10,20], tag=3 };
+    mut Data* ptr = &mut data;
+    i32[2] original = ptr->values;
+    ptr->values = [7,8];
+    ptr->values = ptr->values;
+    return original[0] + data.values[0];
+}

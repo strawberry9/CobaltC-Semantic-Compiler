@@ -1,0 +1,19 @@
+module runtime_array_fields;
+
+struct Point { i32 x; i32 y; }
+
+fn take_field(i32 index) : i32 {
+    mut Point[2] points = [Point { x=10,y=20 },Point { x=30,y=40 }];
+    i32 taken = move points[index].x;
+    i32 sibling = points[index].y;
+    points[0].x = 7;
+    points[1].x = 8;
+    return taken + sibling;
+}
+
+fn borrow_field(i32 index) : i32 {
+    mut Point[2] points = [Point { x=10,y=20 },Point { x=30,y=40 }];
+    mut i32* selected = &mut points[index].x;
+    points[index].y = 9;
+    return *selected;
+}

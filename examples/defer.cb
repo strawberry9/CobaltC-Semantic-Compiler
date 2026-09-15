@@ -1,0 +1,8 @@
+module examples.defer_demo;
+fn process(i32 input) : i32
+{
+    mut i32 value = input;
+    defer { value = value + 1; };
+    i32 result = value;
+    return result;
+}

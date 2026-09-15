@@ -1,0 +1,20 @@
+module pointer_multidimensional_arrays;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+struct Board {
+    i32[2][2] weights;
+    Point[2][2] points;
+}
+
+fn update_selected(mut Board* board, i32 row, i32 column): i32 {
+    mut i32* weight = &mut board->weights[row][column];
+    *weight = *weight + 1;
+
+    board->points[row][column].x = *weight;
+    Point* selected = &board->points[row][column];
+    return selected->x + selected->y;
+}

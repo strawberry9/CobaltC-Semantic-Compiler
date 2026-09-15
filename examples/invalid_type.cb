@@ -1,0 +1,6 @@
+module examples.invalid_type;
+fn broken() : i32
+{
+    i32 value = true;
+    return value;
+}

@@ -1,0 +1,17 @@
+module multidimensional_struct_arrays;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn select_and_update(i32 row, i32 column): i32 {
+    mut Point[2][2] points = [
+        [Point { x = 1, y = 2 }, Point { x = 3, y = 4 }],
+        [Point { x = 5, y = 6 }, Point { x = 7, y = 8 }]
+    ];
+
+    mut i32* selected = &mut points[row][column].x;
+    *selected = *selected + 10;
+    return *selected;
+}

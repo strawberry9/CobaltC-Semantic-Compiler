@@ -1,0 +1,34 @@
+{
+  "CompositionExclusions.txt": {
+    "sha256": "2f239196ef3b5b61db5cc476e9bd80f534d15aa1b74e1be1dea5d042a344c85f",
+    "url": "https://www.unicode.org/Public/17.0.0/ucd/CompositionExclusions.txt"
+  },
+  "DerivedCoreProperties.txt": {
+    "sha256": "24c7fed1195c482faaefd5c1e7eb821c5ee1fb6de07ecdbaa64b56a99da22c08",
+    "url": "https://www.unicode.org/Public/17.0.0/ucd/DerivedCoreProperties.txt"
+  },
+  "IdentifierStatus.txt": {
+    "sha256": "617228a16da13850bf8af28b6cd08f5e9b6595d2eb60404fe6eee2c85b4e4a35",
+    "url": "https://www.unicode.org/Public/17.0.0/security/IdentifierStatus.txt"
+  },
+  "PropertyValueAliases.txt": {
+    "sha256": "64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a",
+    "url": "https://www.unicode.org/Public/17.0.0/ucd/PropertyValueAliases.txt"
+  },
+  "ScriptExtensions.txt": {
+    "sha256": "ec2107e58825a1586acee8e0911ce18260394ac8b87e535ca325f1ccbeb06bc6",
+    "url": "https://www.unicode.org/Public/17.0.0/ucd/ScriptExtensions.txt"
+  },
+  "Scripts.txt": {
+    "sha256": "9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf",
+    "url": "https://www.unicode.org/Public/17.0.0/ucd/Scripts.txt"
+  },
+  "UnicodeData.txt": {
+    "sha256": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
+    "url": "https://www.unicode.org/Public/17.0.0/ucd/UnicodeData.txt"
+  },
+  "confusables.txt": {
+    "sha256": "091c7f82fc39ef208faf8f94d29c244de99254675e09de163160c810d13ef22a",
+    "url": "https://www.unicode.org/Public/17.0.0/security/confusables.txt"
+  }
+}

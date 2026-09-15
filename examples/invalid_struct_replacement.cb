@@ -1,0 +1,14 @@
+module invalid_struct_replacement;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn main() : i32 {
+    mut Point point = Point { x = 1, y = 2 };
+    mut Point* pointer = &mut point;
+    i32* field = &pointer->x;
+    *pointer = Point { x = 3, y = 4 };
+    return *field;
+}

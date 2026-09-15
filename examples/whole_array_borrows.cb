@@ -1,0 +1,30 @@
+module whole_array_borrows;
+
+struct Data { i32[2] values; i32 tag; }
+struct Point { i32 x; i32 y; }
+
+fn run() : i32 {
+    mut i32[2] values = [1,2];
+    i32[2]* shared = &values;
+    i32[2] original = *shared;
+
+    mut i32[2]* exclusive = &mut values;
+    *exclusive = [7,8];
+    i32 transferred = move (*exclusive)[1];
+    (*exclusive)[1] = 11;
+
+    mut Data data = Data { values=[3,4], tag=5 };
+    i32[2]* field = &data.values;
+    i32[2] field_copy = *field;
+
+    mut Data* root = &mut data;
+    mut i32[2]* projected = &mut root->values;
+    *projected = [9,10];
+
+    mut Point[2] points = [Point { x=2,y=3 },Point { x=5,y=7 }];
+    mut Point[2]* point_pointer = &mut points;
+    i32 moved_x = move (*point_pointer)[1].x;
+    (*point_pointer)[1].x = 13;
+
+    return original[0] + transferred + values[1] + field_copy[1] + data.values[0] + moved_x + points[1].x;
+}

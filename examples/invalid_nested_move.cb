@@ -1,0 +1,16 @@
+module invalid_nested_move;
+
+struct Point { i32 x; i32 y; }
+struct Rectangle { Point start; Point end; }
+
+fn consume(Rectangle value) : void {}
+
+fn main() : i32 {
+    Rectangle rectangle = Rectangle {
+        start = Point { x = 1, y = 2 },
+        end = Point { x = 3, y = 4 }
+    };
+    i32 taken = move rectangle.start.x;
+    consume(rectangle);
+    return taken;
+}

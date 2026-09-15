@@ -1,0 +1,9 @@
+module invalid_runtime_borrow;
+
+fn conflict(i32 first_index, i32 second_index) : i32 {
+    mut i32[2] values = [10, 20];
+    mut i32* first = &mut values[first_index];
+    mut i32* second = &mut values[second_index];
+    *second = 9;
+    return *first;
+}

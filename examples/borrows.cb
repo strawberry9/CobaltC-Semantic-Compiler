@@ -1,0 +1,19 @@
+module examples.borrows;
+export { update; }
+
+fn observe(i32* pointer) : i32
+{
+    return *pointer;
+}
+
+fn update() : i32
+{
+    mut i32 value = 7;
+    mut i32* pointer = &mut value;
+    i32* shared = pointer;
+    i32 before = observe(shared);
+    // The shared reborrow has ended; exclusive access resumes.
+    *pointer = before + 1;
+    // The mutable borrow is no longer needed; the owner is accessible again.
+    return value;
+}

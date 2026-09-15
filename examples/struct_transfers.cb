@@ -1,0 +1,17 @@
+module examples.struct_transfers;
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn transfer_sum() : i32
+{
+    Point original = Point { x = 10, y = 20 };
+    mut Point copied = original;
+    copied.x = 11; // The original still contains x = 10.
+    Point transferred = move original;
+    // original and both its fields are now moved; their cleanup is skipped.
+    return copied.x + transferred.x;
+}

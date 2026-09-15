@@ -1,0 +1,11 @@
+module relational_index_ranges;
+
+fn selected(i32 index):i32 {
+    i32[4] values = [10, 20, 30, 40];
+    if index >= 0 {
+        if index < 4 {
+            return values[index];
+        }
+    }
+    return 0;
+}

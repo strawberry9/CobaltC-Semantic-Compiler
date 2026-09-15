@@ -1,0 +1,14 @@
+module runtime_arrays;
+
+fn update(i32 index) : i32 {
+    mut i32[3] values = [10, 20, 30];
+    values[index] = 7;
+    return values[index];
+}
+
+fn known_index() : i32 {
+    mut i32[2] values;
+    i32 selected = 1;
+    values[selected] = 9;
+    return values[selected];
+}

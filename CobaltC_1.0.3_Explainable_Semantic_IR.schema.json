@@ -1,0 +1,1115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cobaltc.example/schema/explainable-semantic-ir-1.0.0.json",
+  "title": "CobaltC 1.0.3 Explainable Semantic IR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "compilation",
+    "source_files",
+    "modules",
+    "types",
+    "symbols",
+    "functions",
+    "contracts",
+    "rules",
+    "diagnostics",
+    "summary"
+  ],
+  "properties": {
+    "format": {
+      "$ref": "#/$defs/format"
+    },
+    "compilation": {
+      "$ref": "#/$defs/compilation"
+    },
+    "source_files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceFile"
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/module"
+      }
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/type"
+      }
+    },
+    "symbols": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/symbol"
+      }
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/function"
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contract"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ruleRef"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "start_line",
+        "start_col",
+        "end_line",
+        "end_col"
+      ],
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "start_line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "start_col": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "end_line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "end_col": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "language",
+        "language_publication"
+      ],
+      "properties": {
+        "name": {
+          "const": "CobaltC-Explainable-Semantic-IR"
+        },
+        "version": {
+          "const": "1.0.0"
+        },
+        "language": {
+          "const": "CobaltC"
+        },
+        "language_publication": {
+          "const": "1.0.3"
+        }
+      }
+    },
+    "compilation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result",
+        "analysis_model"
+      ],
+      "properties": {
+        "compiler": {
+          "type": "object"
+        },
+        "result": {
+          "enum": [
+            "valid",
+            "invalid",
+            "incomplete"
+          ]
+        },
+        "analysis_model": {
+          "type": "string"
+        },
+        "source_hashes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "sourceFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "path": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        }
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "imports",
+        "exports"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "imports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "return_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "copyable": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "destructor": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "symbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "place": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "function": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "type",
+        "entry_block",
+        "blocks",
+        "places",
+        "values",
+        "capabilities",
+        "lifetimes",
+        "cleanup_regions",
+        "unsafe_regions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "entry_block": {
+          "type": "string"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          }
+        },
+        "places": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/place"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/value"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capability"
+          }
+        },
+        "lifetimes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/lifetime"
+          }
+        },
+        "cleanup_regions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cleanupRegion"
+          }
+        },
+        "unsafe_regions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/unsafeRegion"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "operations",
+        "terminator"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/operation"
+          }
+        },
+        "terminator": {
+          "$ref": "#/$defs/terminator"
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "place": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "ownership",
+        "initialization",
+        "mutability",
+        "lifetime"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "type": "string"
+        },
+        "ownership": {
+          "type": "string"
+        },
+        "initialization": {
+          "type": "string"
+        },
+        "mutability": {
+          "type": "string"
+        },
+        "nullability": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lifetime": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "object_identity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "field_path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "type": "string"
+        },
+        "origin_op": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "place": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "capability": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "referent",
+        "access",
+        "lifetime",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "referent": {
+          "type": "string"
+        },
+        "access": {
+          "enum": [
+            "SharedRead",
+            "MutableExclusive"
+          ]
+        },
+        "lifetime": {
+          "type": "string"
+        },
+        "origin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "Active",
+            "Suspended",
+            "Expired"
+          ]
+        },
+        "derived_from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "lifetime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "referent",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "referent": {
+          "type": "string"
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lower_bound": {
+          "type": "string"
+        },
+        "upper_bound": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "Live",
+            "Ended"
+          ]
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "cleanupRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "parent",
+        "defer_obligations",
+        "destruction_places"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "defer_obligations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/defer"
+          }
+        },
+        "destruction_places": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "defer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "registration_order"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "registration_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "body_block": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "captured_places": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "unsafeRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "parent",
+        "obligations"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "obligations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/obligation"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "obligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "satisfied": {
+          "type": "boolean"
+        },
+        "rule_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ownership": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "initialization": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "borrows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lifetimes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "destruction": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "concurrency": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unsafe": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "abi": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "operands",
+        "results",
+        "preconditions",
+        "postconditions",
+        "effects",
+        "rule_refs",
+        "facts_established",
+        "facts_invalidated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "operands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attributes": {
+          "type": "object"
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "effects": {
+          "$ref": "#/$defs/effect"
+        },
+        "rule_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facts_established": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facts_invalidated": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "terminator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "jump",
+            "branch",
+            "switch",
+            "return",
+            "break",
+            "continue",
+            "fail",
+            "unreachable"
+          ]
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attributes": {
+          "type": "object"
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "abi_profile": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "argument_representations": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "return_representation": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "ownership_contracts": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "lifetime_contracts": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "borrow_contracts": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "nullability": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "destruction_responsibility": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "failure_contract": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "concurrency_contract": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "representation_contract": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "safety_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        }
+      }
+    },
+    "ruleRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "formal_rule": {
+          "type": "string"
+        },
+        "source_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "severity",
+        "code",
+        "message"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning",
+            "note"
+          ]
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/sourceSpan"
+        },
+        "rule_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "related_entities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid",
+        "operation_count",
+        "diagnostic_count"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "operation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "diagnostic_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "invariants_checked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "invariants_satisfied": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "invariants_failed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

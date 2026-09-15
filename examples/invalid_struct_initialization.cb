@@ -1,0 +1,19 @@
+module examples.invalid_struct_initialization;
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn incomplete(bool condition) : i32
+{
+    mut Point point;
+    point.x = 10;
+    if condition
+    {
+        point.y = 20;
+    }
+    // Invalid: point.y is uninitialized when condition is false.
+    return point.y;
+}

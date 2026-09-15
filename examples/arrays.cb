@@ -1,0 +1,17 @@
+module arrays;
+
+fn duplicate(i32[3] values) : i32[3] {
+    return move values;
+}
+
+fn main() : i32 {
+    mut i32[3] values = [10, 20, 30];
+    i32 taken = move values[0];
+    values[0] = taken;
+    mut i32* first = &mut values[0];
+    mut i32* last = &mut values[2];
+    *first = 11;
+    *last = 31;
+    i32[3] copied = duplicate(values);
+    return copied[0] + copied[2];
+}

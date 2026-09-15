@@ -1,0 +1,18 @@
+module temporary_fields;
+
+struct Point { i32 x; i32 y; }
+struct Rectangle { Point start; Point end; }
+
+fn make_rectangle() : Rectangle {
+    return Rectangle {
+        start = Point { x = 1, y = 2 },
+        end = Point { x = 3, y = 4 }
+    };
+}
+
+fn main() : i32 {
+    Point start = make_rectangle().start;
+    i32 end_y = make_rectangle().end.y;
+    i32 offset = Point { x = 7, y = 8 }.x;
+    return start.x + end_y + offset;
+}

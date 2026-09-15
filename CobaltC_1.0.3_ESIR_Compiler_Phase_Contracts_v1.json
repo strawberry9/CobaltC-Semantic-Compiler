@@ -1,0 +1,693 @@
+{
+  "format": "CobaltC-Explainable-Semantic-IR-Compiler-Phase-Contracts",
+  "version": "1.0.0",
+  "language": "CobaltC",
+  "language_publication": "1.0.3",
+  "status": "derived implementation artifact",
+  "authority": "CobaltC Programming Language Specification 1.0.3",
+  "objective": "source -> semantic analyses -> explainable semantic IR JSON",
+  "no_backend_required": true,
+  "phase_order": [
+    "P0",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15",
+    "P16",
+    "P17"
+  ],
+  "phases": [
+    {
+      "id": "P0",
+      "name": "source_module_discovery",
+      "kind": "none",
+      "depends_on": [],
+      "inputs": [],
+      "outputs": [
+        "source_files",
+        "modules",
+        "source_maps",
+        "source_hashes"
+      ],
+      "must_establish": [
+        "file_id",
+        "module_id",
+        "source_span_addressability"
+      ],
+      "must_preserve": [
+        "lexical"
+      ],
+      "must_not_assume": [],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "source provenance / declarations"
+    },
+    {
+      "id": "P1",
+      "name": "lexing",
+      "kind": "syntax",
+      "depends_on": [
+        "P0"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "tokens",
+        "token_spans",
+        "lexical_diagnostics"
+      ],
+      "must_establish": [
+        "token_stream",
+        "token_spans"
+      ],
+      "must_preserve": [
+        "AST parser inputs"
+      ],
+      "must_not_assume": [
+        "semantic_resolution"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P2",
+      "name": "parsing",
+      "kind": "syntax",
+      "depends_on": [
+        "P1"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "ast",
+        "syntax_diagnostics",
+        "ast_spans"
+      ],
+      "must_establish": [
+        "AST",
+        "AST source provenance"
+      ],
+      "must_preserve": [
+        "semantic_structure"
+      ],
+      "must_not_assume": [
+        "semantic_validity"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P3",
+      "name": "ast_normalization",
+      "kind": "normalization",
+      "depends_on": [
+        "P2"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "normalized_ast",
+        "origin_map"
+      ],
+      "must_establish": [
+        "canonical source constructs",
+        "synthetic-node provenance"
+      ],
+      "must_preserve": [
+        "semantic analysers"
+      ],
+      "must_not_assume": [
+        "semantic_optimization"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P4",
+      "name": "name_resolution",
+      "kind": "semantic",
+      "depends_on": [
+        "P3"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "symbols",
+        "scopes",
+        "reference_bindings",
+        "resolution_diagnostics"
+      ],
+      "must_establish": [
+        "symbol graph",
+        "resolved references"
+      ],
+      "must_preserve": [
+        "symbols",
+        "module references"
+      ],
+      "must_not_assume": [
+        "type_analysis"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "source provenance / declarations"
+    },
+    {
+      "id": "P5",
+      "name": "type_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P4"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "types",
+        "expression_types",
+        "generic_substitutions",
+        "type_diagnostics"
+      ],
+      "must_establish": [
+        "type identity",
+        "compatibility",
+        "conversions"
+      ],
+      "must_preserve": [
+        "typed values",
+        "type facts"
+      ],
+      "must_not_assume": [
+        "backend_layout_assumptions"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P6",
+      "name": "place_storage_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P5"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "places",
+        "object_identity",
+        "paths",
+        "mutability_facts"
+      ],
+      "must_establish": [
+        "place graph",
+        "storage identity"
+      ],
+      "must_preserve": [
+        "ownership",
+        "initialization",
+        "borrowing"
+      ],
+      "must_not_assume": [
+        "machine_address_assumptions"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P7",
+      "name": "initialization_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P6",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "init_states",
+        "initialization_facts",
+        "init_diagnostics"
+      ],
+      "must_establish": [
+        "path-sensitive initialization"
+      ],
+      "must_preserve": [
+        "read/write/init/destroy preconditions"
+      ],
+      "must_not_assume": [
+        "unrelated_optimization"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P8",
+      "name": "ownership_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P5",
+        "P6",
+        "P7",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "ownership_states",
+        "move_copy_graph",
+        "partial_moves",
+        "ownership_diagnostics"
+      ],
+      "must_establish": [
+        "ownership transitions",
+        "move/copy distinctions"
+      ],
+      "must_preserve": [
+        "borrow",
+        "cleanup",
+        "concurrency",
+        "ffi"
+      ],
+      "must_not_assume": [
+        "borrow_lifetimes"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P9",
+      "name": "borrow_capability_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P8",
+        "P6",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "capabilities",
+        "borrow_graph",
+        "reborrows",
+        "borrow_diagnostics"
+      ],
+      "must_establish": [
+        "capability states",
+        "access modes",
+        "origins"
+      ],
+      "must_preserve": [
+        "lifetime",
+        "unsafe",
+        "concurrency",
+        "ffi"
+      ],
+      "must_not_assume": [
+        "machine_pointers"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P10",
+      "name": "lifetime_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P9",
+        "P8",
+        "P7",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "lifetimes",
+        "validity_intervals",
+        "lifetime_diagnostics"
+      ],
+      "must_establish": [
+        "lifetime identities",
+        "containment",
+        "expiration"
+      ],
+      "must_preserve": [
+        "cleanup",
+        "unsafe",
+        "concurrency",
+        "ffi"
+      ],
+      "must_not_assume": [
+        "runtime_gc_assumptions"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P11",
+      "name": "control_flow_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P3",
+        "P5"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "cfg",
+        "blocks",
+        "edges",
+        "path_conditions"
+      ],
+      "must_establish": [
+        "semantic execution paths"
+      ],
+      "must_preserve": [
+        "all path-sensitive analyses"
+      ],
+      "must_not_assume": [
+        "optimization_only_edges"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P12",
+      "name": "cleanup_destruction_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P7",
+        "P8",
+        "P10",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "cleanup_regions",
+        "destruction_obligations",
+        "defer_order",
+        "cleanup_diagnostics"
+      ],
+      "must_establish": [
+        "destruction order",
+        "defer registration/execution"
+      ],
+      "must_preserve": [
+        "ESIR cleanup operations"
+      ],
+      "must_not_assume": [
+        "post-ESIR deletion"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P13",
+      "name": "unsafe_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P8",
+        "P9",
+        "P10",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "unsafe_regions",
+        "unsafe_operations",
+        "unsafe_diagnostics"
+      ],
+      "must_establish": [
+        "unsafe context",
+        "raw access obligations"
+      ],
+      "must_preserve": [
+        "unsafe ESIR operations"
+      ],
+      "must_not_assume": [
+        "semantic_waiver_of_unrelated_rules"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P14",
+      "name": "concurrency_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P8",
+        "P9",
+        "P10",
+        "P11"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "concurrency_context",
+        "sync_edges",
+        "happens_before",
+        "concurrency_diagnostics"
+      ],
+      "must_establish": [
+        "thread/sync relations"
+      ],
+      "must_preserve": [
+        "ESIR concurrency ops"
+      ],
+      "must_not_assume": [
+        "implicit_thread_safety"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P15",
+      "name": "ffi_abi_analysis",
+      "kind": "semantic",
+      "depends_on": [
+        "P5",
+        "P8",
+        "P9",
+        "P10"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "contracts",
+        "ffi_operations",
+        "ffi_diagnostics"
+      ],
+      "must_establish": [
+        "contract obligations",
+        "representation checks"
+      ],
+      "must_preserve": [
+        "ESIR ffi_call"
+      ],
+      "must_not_assume": [
+        "unstated_platform_abi"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P16",
+      "name": "global_semantic_validation",
+      "kind": "semantic",
+      "depends_on": [
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "semantic_validity",
+        "cross_phase_diagnostics",
+        "rule_closure"
+      ],
+      "must_establish": [
+        "global invariants",
+        "cross-subsystem consistency"
+      ],
+      "must_preserve": [
+        "final ESIR validity"
+      ],
+      "must_not_assume": [
+        "fabricated_facts"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "contributes semantic facts/operations/provenance"
+    },
+    {
+      "id": "P17",
+      "name": "esir_emission",
+      "kind": "serialization",
+      "depends_on": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "inputs": [
+        "prior_phase_outputs"
+      ],
+      "outputs": [
+        "esir_json"
+      ],
+      "must_establish": [
+        "complete explainable semantic model"
+      ],
+      "must_preserve": [
+        "external consumer"
+      ],
+      "must_not_assume": [
+        "semantic_loss"
+      ],
+      "diagnostics": "structured diagnostics with source spans, phase, rule references and semantic entities where applicable",
+      "esir_role": "final semantic output contribution"
+    }
+  ],
+  "core_semantic_entities": [
+    "source_span",
+    "symbol",
+    "type",
+    "place",
+    "value",
+    "object_identity",
+    "ownership_state",
+    "initialization_state",
+    "capability",
+    "lifetime",
+    "cleanup_region",
+    "unsafe_region",
+    "contract",
+    "basic_block",
+    "semantic_operation",
+    "diagnostic",
+    "rule_reference",
+    "semantic_fact"
+  ],
+  "semantic_validity_components": [
+    "V_type",
+    "V_init",
+    "V_owner",
+    "V_borrow",
+    "V_lifetime",
+    "V_destroy",
+    "V_control",
+    "V_concurrent",
+    "V_unsafe",
+    "V_ffi"
+  ],
+  "formal_rule_families": [
+    "STATIC-TYPE-001",
+    "STATIC-TYPE-002",
+    "STATIC-INIT-001",
+    "STATIC-INIT-002",
+    "STATIC-OWN-001",
+    "STATIC-OWN-002",
+    "STATIC-OWN-003",
+    "STATIC-BORROW-001",
+    "STATIC-BORROW-002",
+    "STATIC-BORROW-003",
+    "STATIC-BORROW-004",
+    "STATIC-LIFE-001",
+    "STATIC-LIFE-002",
+    "STATIC-CTRL-001",
+    "STATIC-CTRL-002",
+    "SEM-EVAL-001",
+    "TRANS-INIT-001",
+    "TRANS-MOVE-001",
+    "TRANS-COPY-001",
+    "TRANS-BORROW-001",
+    "TRANS-BORROW-002",
+    "TRANS-BORROW-003",
+    "TRANS-ASSIGN-001",
+    "TRANS-ASSIGN-002",
+    "TRANS-DESTROY-001",
+    "TRANS-DEFER-001",
+    "TRANS-DEFER-002",
+    "TRANS-RET-001",
+    "TRANS-FAIL-001",
+    "TRANS-THREAD-001",
+    "TRANS-THREAD-002",
+    "TRANS-SYNC-001",
+    "TRANS-FFI-001",
+    "TRANS-UNSAFE-001",
+    "VALID-001"
+  ],
+  "source_rule_traceability": {
+    "classified_rule_count": 1230,
+    "mapping_artifact": "CobaltC_1.0.3_Rule_to_IR_Traceability_v3.json",
+    "preference": "prefer source-derived rule references where a direct mapping exists; formal rule families may be included alongside them"
+  },
+  "determinism": {
+    "required": true,
+    "stable_id_namespaces": [
+      "file",
+      "module",
+      "token",
+      "ast",
+      "symbol",
+      "type",
+      "place",
+      "value",
+      "cap",
+      "life",
+      "cleanup",
+      "unsafe",
+      "contract",
+      "block",
+      "op",
+      "diag"
+    ],
+    "ordering_rule": "canonical deterministic ordering; no dependence on hash-map iteration"
+  }
+}

@@ -1,0 +1,15 @@
+module examples.invalid_partial_move;
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn incomplete_owner() : i32
+{
+    Point point = Point { x = 10, y = 20 };
+    i32 taken = move point.x;
+    Point copied = point; // Invalid: x is unavailable for a whole-struct copy.
+    return point.y; // The sibling remains available.
+}

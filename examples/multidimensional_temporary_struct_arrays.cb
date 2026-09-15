@@ -1,0 +1,17 @@
+module multidimensional_temporary_struct_arrays;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn make_grid(): Point[2][2] {
+    return [
+        [Point { x = 1, y = 2 }, Point { x = 3, y = 4 }],
+        [Point { x = 5, y = 6 }, Point { x = 7, y = 8 }]
+    ];
+}
+
+fn selected_y(i32 row, i32 column): i32 {
+    return make_grid()[row][column].y;
+}

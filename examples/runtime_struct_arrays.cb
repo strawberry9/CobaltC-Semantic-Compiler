@@ -1,0 +1,18 @@
+module runtime_struct_arrays;
+
+struct Point { i32 x; i32 y; }
+
+fn take(i32 index) : i32 {
+    mut Point[2] points = [Point { x=10,y=20 },Point { x=30,y=40 }];
+    Point selected = move points[index];
+    points = [Point { x=7,y=8 },Point { x=9,y=10 }];
+    return selected.x;
+}
+
+fn update(i32 index) : i32 {
+    mut Point[2] points = [Point { x=10,y=20 },Point { x=30,y=40 }];
+    points[index] = Point { x=7,y=8 };
+    mut Point* selected = &mut points[index];
+    selected->x = 9;
+    return selected->y;
+}

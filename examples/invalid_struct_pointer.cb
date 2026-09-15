@@ -1,0 +1,13 @@
+module invalid_struct_pointer;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn main() : i32 {
+    Point point = Point { x = 1, y = 2 };
+    Point* view = &point;
+    view->x = 9;
+    return view->x;
+}

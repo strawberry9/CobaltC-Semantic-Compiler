@@ -1,0 +1,7 @@
+module invalid_runtime_index;
+
+fn main() : i32 {
+    i32[2] values = [10, 20];
+    i32 selected = 2;
+    return values[selected];
+}

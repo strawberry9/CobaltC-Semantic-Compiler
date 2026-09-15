@@ -1,0 +1,15 @@
+module temporary_struct_arrays;
+
+struct Point { i32 x; i32 y; }
+
+fn make_points() : Point[2] {
+    return [Point { x=10,y=20 },Point { x=30,y=40 }];
+}
+
+fn select(i32 index) : Point {
+    return make_points()[index];
+}
+
+fn coordinate(i32 index) : i32 {
+    return make_points()[index].x;
+}

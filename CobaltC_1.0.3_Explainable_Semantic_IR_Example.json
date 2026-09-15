@@ -1,0 +1,235 @@
+{
+  "format": {
+    "name": "CobaltC-Explainable-Semantic-IR",
+    "version": "1.0.0",
+    "language": "CobaltC",
+    "language_publication": "1.0.3"
+  },
+  "compilation": {
+    "compiler": {
+      "id": "example-cobaltc-semantic-compiler",
+      "version": "0.1"
+    },
+    "result": "valid",
+    "analysis_model": "CobaltC-1.0.3-formal-semantic-model-v3"
+  },
+  "source_files": [
+    {
+      "id": "src0",
+      "path": "example.cc",
+      "encoding": "UTF-8"
+    }
+  ],
+  "modules": [
+    {
+      "id": "mod0",
+      "name": "example",
+      "imports": [],
+      "exports": [],
+      "source_span": {
+        "file": "example.cc",
+        "start_line": 1,
+        "start_col": 1,
+        "end_line": 1,
+        "end_col": 15
+      }
+    }
+  ],
+  "types": [
+    {
+      "id": "ty_i",
+      "kind": "builtin",
+      "name": "Int",
+      "copyable": true,
+      "destructor": false
+    }
+  ],
+  "symbols": [
+    {
+      "id": "sym_x",
+      "name": "x",
+      "kind": "local",
+      "type": "ty_i",
+      "place": "pl_x",
+      "source_span": {
+        "file": "example.cc",
+        "start_line": 2,
+        "start_col": 5,
+        "end_line": 2,
+        "end_col": 6
+      }
+    }
+  ],
+  "functions": [
+    {
+      "id": "fn_main",
+      "name": "main",
+      "type": "fn()->Int",
+      "entry_block": "bb0",
+      "places": [
+        {
+          "id": "pl_x",
+          "type": "ty_i",
+          "ownership": "Owner",
+          "initialization": "Uninitialized",
+          "mutability": "Immutable",
+          "nullability": null,
+          "lifetime": "lt_x",
+          "object_identity": "obj_x",
+          "parent": null,
+          "field_path": [],
+          "source_span": {
+            "file": "example.cc",
+            "start_line": 2,
+            "start_col": 5,
+            "end_line": 2,
+            "end_col": 6
+          }
+        }
+      ],
+      "values": [
+        {
+          "id": "v1",
+          "type": "ty_i",
+          "origin_op": "op_init",
+          "place": "pl_x",
+          "capability": null,
+          "source_span": {
+            "file": "example.cc",
+            "start_line": 2,
+            "start_col": 9,
+            "end_line": 2,
+            "end_col": 14
+          }
+        }
+      ],
+      "capabilities": [],
+      "lifetimes": [
+        {
+          "id": "lt_x",
+          "referent": "pl_x",
+          "parent": null,
+          "lower_bound": "function-entry",
+          "upper_bound": "function-exit",
+          "status": "Live"
+        }
+      ],
+      "cleanup_regions": [
+        {
+          "id": "cr0",
+          "parent": null,
+          "defer_obligations": [],
+          "destruction_places": [
+            "pl_x"
+          ]
+        }
+      ],
+      "unsafe_regions": [],
+      "blocks": [
+        {
+          "id": "bb0",
+          "parameters": [],
+          "operations": [
+            {
+              "id": "op_init",
+              "kind": "init",
+              "operands": [],
+              "results": [
+                "v1"
+              ],
+              "source_span": {
+                "file": "example.cc",
+                "start_line": 2,
+                "start_col": 5,
+                "end_line": 2,
+                "end_col": 14
+              },
+              "preconditions": [
+                "pl_x = Uninitialized"
+              ],
+              "postconditions": [
+                "pl_x = Initialized(v1)"
+              ],
+              "effects": {
+                "ownership": [
+                  "pl_x is owner of v1"
+                ],
+                "initialization": [
+                  "pl_x becomes initialized"
+                ],
+                "borrows": [],
+                "lifetimes": [],
+                "destruction": [],
+                "concurrency": [],
+                "unsafe": [],
+                "abi": []
+              },
+              "rule_refs": [
+                "TRANS-INIT-001"
+              ],
+              "facts_established": [
+                "initialized(pl_x)",
+                "owns(pl_x)"
+              ],
+              "facts_invalidated": [
+                "uninitialized(pl_x)"
+              ]
+            }
+          ],
+          "terminator": {
+            "kind": "return",
+            "operands": [
+              "v1"
+            ],
+            "source_span": {
+              "file": "example.cc",
+              "start_line": 3,
+              "start_col": 1,
+              "end_line": 3,
+              "end_col": 9
+            }
+          }
+        }
+      ],
+      "source_span": {
+        "file": "example.cc",
+        "start_line": 1,
+        "start_col": 1,
+        "end_line": 3,
+        "end_col": 9
+      }
+    }
+  ],
+  "contracts": [],
+  "rules": [
+    {
+      "id": "TRANS-INIT-001",
+      "formal_rule": "TRANS-INIT-001",
+      "source_rules": [],
+      "category": "INITIALIZATION"
+    }
+  ],
+  "diagnostics": [],
+  "summary": {
+    "valid": true,
+    "operation_count": 1,
+    "diagnostic_count": 0,
+    "invariants_checked": [
+      "V_type",
+      "V_init",
+      "V_owner",
+      "V_borrow",
+      "V_lifetime",
+      "V_destroy"
+    ],
+    "invariants_satisfied": [
+      "V_type",
+      "V_init",
+      "V_owner",
+      "V_borrow",
+      "V_lifetime",
+      "V_destroy"
+    ],
+    "invariants_failed": []
+  }
+}

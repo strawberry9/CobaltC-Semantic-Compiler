@@ -1,0 +1,21 @@
+module array_fields;
+
+struct Data {
+    i32[3] values;
+    i32 tag;
+}
+
+fn take(i32 index) : i32 {
+    mut Data data = Data { values=[10,20,30], tag=7 };
+    i32 taken = move data.values[index];
+    data.values = [40,50,60];
+    Data restored = data;
+    return taken + restored.tag;
+}
+
+fn borrow(i32 index) : i32 {
+    mut Data data = Data { values=[10,20,30], tag=7 };
+    i32* selected = &data.values[index];
+    data.tag = 9;
+    return *selected;
+}

@@ -1,0 +1,7 @@
+module examples.invalid_move;
+fn broken() : i32
+{
+    i32 first = 7;
+    i32 second = move first;
+    return first;
+}

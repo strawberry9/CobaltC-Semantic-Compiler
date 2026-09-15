@@ -1,0 +1,18 @@
+module examples.scalars;
+export { choose; }
+
+fn choose(bool condition, i32 input) : i32
+{
+    mut i32 result;
+    if condition
+    {
+        result = input + 1;
+    }
+    else
+    {
+        result = 0;
+    }
+    i32 copied = result;
+    i32 transferred = move copied;
+    return transferred;
+}

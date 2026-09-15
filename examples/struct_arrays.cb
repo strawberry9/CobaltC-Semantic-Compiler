@@ -1,0 +1,19 @@
+module struct_arrays;
+
+struct Point { i32 x; i32 y; }
+
+fn restore() : i32 {
+    mut Point[2] points = [Point { x=10,y=20 },Point { x=30,y=40 }];
+    i32 taken = move points[0].x;
+    points[0].x = 7;
+    Point[2] copied = points;
+    return taken + copied[0].x;
+}
+
+fn borrow_element() : i32 {
+    mut Point[2] points = [Point { x=10,y=20 },Point { x=30,y=40 }];
+    mut Point* ptr = &mut points[0];
+    points[1].x = 9;
+    ptr->x = 7;
+    return ptr->x;
+}

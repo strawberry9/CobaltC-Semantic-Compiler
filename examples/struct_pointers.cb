@@ -1,0 +1,25 @@
+module struct_pointers;
+
+struct Point {
+    i32 x;
+    i32 y;
+}
+
+fn update(mut Point* point) : void {
+    mut i32* left = &mut point->x;
+    mut i32* right = &mut (*point).y;
+    *left = *left + 1;
+    *right = *right + 2;
+}
+
+fn select_y(Point* point) : i32* {
+    return &point->y;
+}
+
+fn main() : i32 {
+    mut Point point = Point { x = 3, y = 5 };
+    update(&mut point);
+    Point* view = &point;
+    i32* selected = select_y(view);
+    return view->x + *selected;
+}

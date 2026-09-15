@@ -1,0 +1,7 @@
+module examples.invalid_lifetime;
+
+fn escape() : i32*
+{
+    i32 value = 7;
+    return &value; // Invalid: local storage ends before the caller can use it.
+}

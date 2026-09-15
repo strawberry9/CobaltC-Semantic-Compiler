@@ -1,0 +1,14 @@
+module examples.invalid_struct_move;
+
+struct Point
+{
+    i32 x;
+    i32 y;
+}
+
+fn invalid_read() : i32
+{
+    Point original = Point { x = 10, y = 20 };
+    Point transferred = move original;
+    return original.y; // Invalid: the whole-struct move consumed this field.
+}

@@ -1,0 +1,20 @@
+module struct_array_fields;
+
+struct Point { i32 x; i32 y; }
+struct Scene { Point[2] points; i32 tag; }
+
+fn restore(i32 index) : i32 {
+    mut Scene scene = Scene { points=[Point { x=1,y=2 },Point { x=3,y=4 }], tag=7 };
+    Point taken = move scene.points[index];
+    scene.points = [Point { x=9,y=8 },Point { x=7,y=6 }];
+    Scene copied = scene;
+    return taken.x + copied.tag;
+}
+
+fn update(i32 index) : i32 {
+    mut Scene scene = Scene { points=[Point { x=1,y=2 },Point { x=3,y=4 }], tag=7 };
+    mut Scene* ptr = &mut scene;
+    ptr->points[index] = Point { x=9,y=8 };
+    Point* selected = &ptr->points[index];
+    return selected->x;
+}

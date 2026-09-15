@@ -1,0 +1,222 @@
+{
+  "specification": {
+    "name": "CobaltC",
+    "edition": "1.0",
+    "publication_version": "1.0.3"
+  },
+  "model_version": "3.0",
+  "source_formal_rule_count": 35,
+  "formal_rules": [
+    [
+      "STATIC-TYPE-001",
+      "Expression typing",
+      "\u0393 \u22a2 e : T",
+      "Every accepted expression has a specification-permitted type."
+    ],
+    [
+      "STATIC-TYPE-002",
+      "Type compatibility",
+      "\u0393 \u22a2 T1 \u2248 T2",
+      "An operation requiring compatible types is valid only when the specified compatibility relation holds."
+    ],
+    [
+      "STATIC-INIT-001",
+      "Initialized read",
+      "\u0393,\u03a3 \u22a2 initialized(p)",
+      "A read requires the place to contain a valid initialized value."
+    ],
+    [
+      "STATIC-INIT-002",
+      "Valid destruction state",
+      "\u0393,\u03a3 \u22a2 destroyable(p)",
+      "Destruction applies only to the initialized/partial ownership state permitted by the specification."
+    ],
+    [
+      "STATIC-OWN-001",
+      "Unique ownership",
+      "\u0393,\u03a3 \u22a2 owns(p)",
+      "An owned value has exactly one responsible owner."
+    ],
+    [
+      "STATIC-OWN-002",
+      "Move validity",
+      "\u0393,\u03a3 \u22a2 move_valid(p)",
+      "A move is valid only when the source currently owns an initialized value and no rule forbids invalidating it."
+    ],
+    [
+      "STATIC-OWN-003",
+      "Copy validity",
+      "\u0393,\u03a3 \u22a2 copy_valid(p)",
+      "A copy is valid only when the type copy contract permits copying."
+    ],
+    [
+      "STATIC-BORROW-001",
+      "Shared borrow creation",
+      "\u0393,\u03a3 \u22a2 borrow_shared(p,\u03bb)",
+      "Shared borrowing is valid only when ownership, mutability, overlap, and lifetime constraints permit it."
+    ],
+    [
+      "STATIC-BORROW-002",
+      "Mutable borrow creation",
+      "\u0393,\u03a3 \u22a2 borrow_mut(p,\u03bb)",
+      "A mutable borrow requires exclusive compatible access to the referent."
+    ],
+    [
+      "STATIC-BORROW-003",
+      "Capability compatibility",
+      "\u0393,\u03a3 \u22a2 compatible(\u03ba1,\u03ba2)",
+      "Overlapping capabilities must satisfy the applicable shared/mutable compatibility relation."
+    ],
+    [
+      "STATIC-BORROW-004",
+      "Borrow end",
+      "\u0393,\u03a3 \u22a2 end(\u03ba)",
+      "A capability may cease to constrain access only when no later semantic use requires it and doing so preserves behavior."
+    ],
+    [
+      "STATIC-LIFE-001",
+      "Referent containment",
+      "\u0393,\u03a3 \u22a2 \u03bbb \u2286 \u03bbr",
+      "A borrow lifetime cannot exceed the referent lifetime."
+    ],
+    [
+      "STATIC-LIFE-002",
+      "Returned borrow",
+      "\u0393,\u03a3 \u22a2 return_borrow(\u03bain,\u03baout)",
+      "A returned managed pointer derived from an input borrow cannot outlive that input borrow."
+    ],
+    [
+      "STATIC-CTRL-001",
+      "Path merge",
+      "\u0393,\u03a31,\u03a32 \u22a2 merge(\u03a31,\u03a32)",
+      "A control-flow join retains only semantic facts established on all applicable incoming paths, subject to specification rules."
+    ],
+    [
+      "STATIC-CTRL-002",
+      "Exhaustive match",
+      "\u0393 \u22a2 exhaustive(match)",
+      "Finite known cases must be exhaustively covered where the specification requires rejection of non-exhaustive matches."
+    ],
+    [
+      "SEM-EVAL-001",
+      "Left-to-right evaluation",
+      "\u03a3,e1;e2 \u21dd \u03a31,\u03a32",
+      "Operands and function arguments are evaluated in the specified left-to-right order."
+    ],
+    [
+      "TRANS-INIT-001",
+      "Initialize",
+      "\u03a3[p\u21a6Uninitialized] \u27f6 init(p,v) \u27f6 \u03a3[p\u21a6Initialized(v)]",
+      "Successful initialization changes the semantic state from uninitialized to initialized."
+    ],
+    [
+      "TRANS-MOVE-001",
+      "Move",
+      "\u03a3[p\u21a6Owned(v)] \u27f6 move(p) \u27f6 \u03a3[p\u21a6Moved], q\u21a6Owned(v)",
+      "A successful move transfers ownership responsibility and invalidates the source ownership state."
+    ],
+    [
+      "TRANS-COPY-001",
+      "Copy",
+      "\u03a3[p\u21a6Copyable(v)] \u27f6 copy(p) \u27f6 \u03a3[p\u21a6Copyable(v)], q\u21a6Independent(v)",
+      "Copying creates an independent value and does not transfer ownership."
+    ],
+    [
+      "TRANS-BORROW-001",
+      "Create shared capability",
+      "\u03a3 \u27f6 borrow_shared(p) \u27f6 \u03a3,\u03baShared",
+      "A shared capability is created without transferring ownership."
+    ],
+    [
+      "TRANS-BORROW-002",
+      "Create mutable capability",
+      "\u03a3 \u27f6 borrow_mut(p) \u27f6 \u03a3,\u03baMut",
+      "A mutable capability is created only when exclusive mutable access is permitted."
+    ],
+    [
+      "TRANS-BORROW-003",
+      "Reborrow",
+      "\u03a3,\u03ba1 \u27f6 reborrow(\u03ba1,mode) \u27f6 \u03a3,\u03ba2",
+      "A derived capability does not transfer underlying ownership."
+    ],
+    [
+      "TRANS-ASSIGN-001",
+      "Assignment success",
+      "\u03a3 \u27f6 rhs_eval(v) \u27f6 assign(d,v) \u27f6 \u03a3\\old(d)+v",
+      "The previous owned destination value is replaced only after successful RHS evaluation."
+    ],
+    [
+      "TRANS-ASSIGN-002",
+      "Assignment failure",
+      "\u03a3 \u27f6 rhs_eval_fail \u27f6 \u03a3",
+      "A failed RHS evaluation does not replace the destination value."
+    ],
+    [
+      "TRANS-DESTROY-001",
+      "Destroy",
+      "\u03a3[p\u21a6Owned(v)] \u27f6 destroy(p) \u27f6 \u03a3[p\u21a6Consumed]",
+      "Destruction consumes the applicable ownership/destruction responsibility exactly as specified."
+    ],
+    [
+      "TRANS-DEFER-001",
+      "Register defer",
+      "\u03a3 \u27f6 defer_register(S,path) \u27f6 \u03a3,\u0394+obligation",
+      "Registration creates a future semantic use bound to the enclosing scope."
+    ],
+    [
+      "TRANS-DEFER-002",
+      "Execute defer",
+      "\u03a3,\u0394 \u27f6 scope_exit(S) \u27f6 execute(\u0394S) \u27f6 destroy_remaining(S)",
+      "Deferred obligations execute before automatic destruction of the scope\u2019s owned locals, in the specified order."
+    ],
+    [
+      "TRANS-RET-001",
+      "Return",
+      "\u03a3 \u27f6 eval(return_expr) \u27f6 cleanup(exited_scopes) \u27f6 return(v)",
+      "Return evaluates its expression before deferred blocks and destruction associated with exited scopes."
+    ],
+    [
+      "TRANS-FAIL-001",
+      "Failure",
+      "\u03a3 \u27f6 fail(f) \u27f6 cleanup/failure semantics",
+      "A failed operation produces no successful result and cannot be treated as having completed normally."
+    ],
+    [
+      "TRANS-THREAD-001",
+      "Thread spawn",
+      "\u03a3 \u27f6 spawn(args) \u27f6 \u03a3c",
+      "Cross-context ownership transfer creates exactly one destination ownership responsibility."
+    ],
+    [
+      "TRANS-THREAD-002",
+      "Thread join",
+      "\u03a3c \u27f6 join(h) \u27f6 \u03a3",
+      "Successful join establishes the required happens-after relationship."
+    ],
+    [
+      "TRANS-SYNC-001",
+      "Mutex unlock/lock",
+      "unlock(m) \u2192hb\u2192 subsequent_successful_lock(m)",
+      "The specified synchronization relation establishes ordering and visibility."
+    ],
+    [
+      "TRANS-FFI-001",
+      "FFI call",
+      "\u03a3 \u27f6 ffi_call(contract,args) \u27f6 \u03a3\u2032",
+      "An FFI call is valid only when ABI representation and explicit semantic contract obligations hold."
+    ],
+    [
+      "TRANS-UNSAFE-001",
+      "Unsafe region",
+      "\u03a3 \u27f6 unsafe_enter \u27f6 unsafe_op* \u27f6 unsafe_exit",
+      "Unsafe context changes the permitted operation set but does not automatically create ownership, initialization, lifetime, or managed capability facts."
+    ],
+    [
+      "VALID-001",
+      "Semantic IR validity",
+      "IR \u22a2 V_type \u2227 V_init \u2227 V_owner \u2227 V_borrow \u2227 V_lifetime \u2227 V_destroy \u2227 V_control \u2227 V_concurrent \u2227 V_unsafe \u2227 V_ffi",
+      "Validated semantic IR preserves the combined language safety model."
+    ]
+  ],
+  "note": "These normalized rules are derived from the existing semantic model; they do not add source syntax or implementation requirements."
+}

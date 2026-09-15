@@ -1,0 +1,14 @@
+module temporary_arrays;
+
+fn make_values() : i32[3] {
+    return [10, 20, 30];
+}
+
+fn select(i32 index) : i32 {
+    return make_values()[index];
+}
+
+fn first() : i32 {
+    i32 value = make_values()[0];
+    return value;
+}
