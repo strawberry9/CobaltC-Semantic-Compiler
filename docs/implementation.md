@@ -1,5 +1,9 @@
 # Implementation inventory and decisions
 
+The active milestone and procedure for **“continue with goal”** are recorded in [goal.md](goal.md). Complete one bounded phase per confirmation and update that handoff before stopping.
+
+The [Core requirements checklist](core-checklist.md) maps the normative Section 80.1 obligations to required, deferred, and excluded scope, current evidence, acceptance gates, and the ordered remaining work. Its first implementation priority is auditing managed pointer copy semantics and aggregate capability preservation; previous milestone descriptions are not conformance certification.
+
 The handoff is the execution procedure. `Appendix_06(10).html` (publication 1.0.3) remains normative. The formal v3 materials describe semantic judgments; classification and traceability index the source rules; ESIR specification/schema define the external artifact. The supplied files have not been modified.
 
 `inventory.json` records all 13 input files, their hashes, versions, purposes, authority levels, sections or machine-readable structures, and cross-reference integrity. `tools/audit_artifacts.py` regenerates it from the original inputs. `coverage.json` accounts for all 1,230 classified records and 35 formal families.

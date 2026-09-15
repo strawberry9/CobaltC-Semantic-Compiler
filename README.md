@@ -2,6 +2,10 @@
 
 # CobaltC Semantic Compiler
 
+Progress toward the first milestone is tracked in the [Core requirements checklist](docs/core-checklist.md), including implementation gaps, acceptance criteria, and explicit deviations from full Core Conformance.
+
+The agreed first milestone is a **single-module core semantic compiler**, including `match`, with import syntax accepted but import resolution explicitly incomplete. FFI, concurrency, threads, and standard-library facilities are outside this milestone. See the [goal and continuation plan](docs/goal.md) for scope, completion criteria, and the next phase.
+
 ## Project goals
 
 We are building **a trustworthy CobaltC compiler that explains its reasoning**. The goal is to help programmers understand what their code means under the CobaltC language specification, why an operation is accepted or rejected, and how values are initialized, copied, moved, borrowed, and cleaned up.
