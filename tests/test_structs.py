@@ -107,9 +107,46 @@ class StructTests(unittest.TestCase):
         self.rejected('mut Point point; defer { point.y; }; point.x=7; return 0;', 'uninitialized_read')
 
     def test_unsupported_aggregate_features_are_incomplete(self):
-        for field in ('i32* pointer;', 'f64 real;'):
+        for field in ('f64 real;',):
             doc=self.rejected('return 0;', 'unsupported_struct_field', declaration='struct Point { '+field+' }')
             self.assertEqual(doc['compilation']['result'], 'incomplete')
+
+    def test_managed_pointer_fields_preserve_referent_lifetimes(self):
+        doc=self.valid('mut i32 value=7; Holder holder=Holder{pointer=&value}; return *holder.pointer;',
+                       declaration='struct Holder { i32* pointer; }')
+        self.assertTrue(any(o['kind']=='deref_read' for o in self.ops(doc)))
+        self.rejected('mut i32 value=7; Holder holder=Holder{pointer=&value}; value=8; '
+                      'return *holder.pointer;', 'borrow_conflict', declaration='struct Holder { i32* pointer; }')
+
+    def test_exclusive_pointer_fields_allow_writes(self):
+        doc=self.valid('mut i32 value=7; Holder holder=Holder{pointer=&mut value}; '
+                       '*holder.pointer=9; return value;',
+                       declaration='struct Holder { mut i32* pointer; }')
+        self.assertTrue(any(o['kind']=='deref_assign' for o in self.ops(doc)))
+
+    def test_pointer_field_struct_copies_downgrade_exclusive_access(self):
+        self.rejected('mut i32 value=7; Holder holder=Holder{pointer=&mut value}; '
+                      'Holder copy=holder; *copy.pointer=9; return value;', 'borrow_conflict',
+                      declaration='struct Holder { mut i32* pointer; }')
+
+    def test_pointer_field_rebinding_releases_old_referent(self):
+        doc=self.valid('mut i32 first=1; i32 second=2; mut Holder holder=Holder{pointer=&first}; '
+                       'holder.pointer=&second; return *holder.pointer;',
+                       declaration='struct Holder { i32* pointer; }')
+        self.assertTrue(any(o['kind']=='assign' and o['attributes'].get('pointer_capabilities_after')
+                            for o in self.ops(doc)))
+
+    def test_deferred_pointer_field_keeps_referent_live(self):
+        self.rejected('mut i32 first=1; Holder holder=Holder{pointer=&first}; '
+                      'defer { *holder.pointer; }; first=3; return 0;', 'borrow_conflict',
+                      declaration='struct Holder { i32* pointer; }')
+
+    def test_pointer_field_return_rejects_local_escape(self):
+        source = ('module demo; struct Holder { i32* pointer; } '
+                  'fn make():Holder { mut i32 value=7; return Holder{pointer=&value}; }')
+        doc = compile_text(source)
+        self.assertNotEqual(doc['compilation']['result'], 'valid')
+        self.assertIn('lifetime_violation', [d['code'] for d in doc['diagnostics']])
 
     def test_declaration_errors_exports_and_forward_type_resolution(self):
         self.rejected('return 0;', 'duplicate_field', declaration='struct Point { i32 x; i32 x; }')

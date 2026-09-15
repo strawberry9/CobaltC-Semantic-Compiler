@@ -143,8 +143,8 @@ class Lowerer:
                     self.error(field,'duplicate_field',f'Field {fname!r} is already declared.','P4'); continue
                 if typ.endswith(']'):
                     typ = self.check_type(typ, field)
-                if typ != 'error' and typ not in (SUPPORTED - {'void'}) and typ not in self.structs:
-                    self.error(field,'unsupported_struct_field','Struct fields require supported scalars, fixed-size arrays, or acyclic structs.')
+                if typ != 'error' and typ not in (SUPPORTED - {'void'}) and typ not in self.structs and not is_pointer(typ):
+                    self.error(field,'unsupported_struct_field','Struct fields require supported scalars, fixed-size arrays, acyclic structs, or managed pointers.')
                     typ = 'error'; self.types[name]['copyable'] = None
                 if typ == 'error': self.types[name]['copyable'] = None
                 fields[fname] = typ

@@ -1,0 +1,22 @@
+module pointer_fields;
+
+struct Holder {
+    i32* pointer;
+}
+
+struct MutableHolder {
+    mut i32* pointer;
+}
+
+fn read_field():i32 {
+    mut i32 value=7;
+    Holder holder=Holder{pointer=&value};
+    return *holder.pointer;
+}
+
+fn write_field():i32 {
+    mut i32 value=7;
+    MutableHolder holder=MutableHolder{pointer=&mut value};
+    *holder.pointer=9;
+    return value;
+}

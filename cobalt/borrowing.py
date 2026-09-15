@@ -356,6 +356,13 @@ class BorrowAnalysis:
                 op['effects']['borrows'] = [f'call_requires({cid})' for _, p in pointer_args for cid in sorted(p.capabilities)]
         elif kind == 'return_prepare' and args:
             pointer = facts.get(args[0], Fact(False))
+            for field_path, field in pointer.fields:
+                for cid in sorted(field.capabilities):
+                    ref = self.caps[cid]['referent']
+                    if ref not in self.external:
+                        valid = self.error(op, 'lifetime_violation',
+                                           'Cannot return a struct containing a managed pointer to local storage.',
+                                           ['BORROW-018','BORROW-079'], [cid, ref])
             if pointer.capabilities:
                 indices = set()
                 for cid in sorted(pointer.capabilities):

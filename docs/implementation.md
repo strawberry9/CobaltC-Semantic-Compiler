@@ -80,7 +80,9 @@ Every local struct has a root place and distinct child places with `parent` and 
 
 This slice has no aggregate destruction hooks or resource-owning fields. Cleanup emits individually guarded scalar-field destruction operations and then ends aggregate storage, without additionally destroying the root as an independent scalar value. Field cleanup is listed in reverse declaration order as an implementation traversal; scalar fields have no observable destruction hooks in this slice. Deferred field references bind to their field places at registration and read execution-time values.
 
-Reports containing struct declarations use `scalar-field-struct-milestone`. This is a bounded extension, not completion of general aggregate ownership: recursive struct definitions or managed-pointer fields, aggregate constants, associated functions and destruction hooks are explicitly unsupported. Supported field declarations are still recorded as nominal types and owned scalar components; no native layout or ABI is inferred.
+Reports containing struct declarations use `scalar-field-struct-milestone`. This is a bounded extension, not completion of general aggregate ownership: recursive struct definitions, aggregate constants, associated functions and destruction hooks are explicitly unsupported. Supported field declarations are still recorded as nominal types and owned scalar components; no native layout or ABI is inferred.
+
+Managed scalar pointer fields are supported as a bounded extension. A field of type `T*` or `mut T*` stores a managed capability in the component field; field reads and writes apply the same lifetime and permission checks as a standalone pointer. Copying a struct derives shared capabilities for pointer fields, while rebinding replaces the field capability and releases its previous referent. Returning a struct is rejected when any pointer field still refers to local storage. Nested pointer types, nullable pointers, resource-owning fields and custom destruction remain outside this slice.
 
 Validation includes positive/negative constructor checks, nominal typing, contextual scalar types and range errors, mutation, partial initialization, branch joins, invalid-initializer rollback, replacement evaluation order, deferred field uses, cleanup guards, deterministic ESIR, and HTML explanations. `examples/structs.cb` and `examples/invalid_struct_initialization.cb` provide checked-in ESIR examples; the former also has a standalone source-inclusive HTML report.
 
@@ -137,7 +139,7 @@ Tests cover independent copies, self-replacement, moves into the destination, fa
 
 ### Nested structs with scalar leaves
 
-Struct fields may now contain other acyclic structs whose leaves are supported scalars. Definitions may reference a later struct declaration. A traversal detects direct and indirect by-value cycles before allocating component paths and diagnoses `unsupported_recursive_struct`. Managed-pointer fields and custom destruction remain unsupported.
+Struct fields may now contain other acyclic structs whose leaves are supported scalars. Definitions may reference a later struct declaration. A traversal detects direct and indirect by-value cycles before allocating component paths and diagnoses `unsupported_recursive_struct`. Pointer-bearing nested aggregates and custom destruction remain unsupported.
 
 Each nested struct and scalar leaf has its own place and lifetime, an immediate `parent` link and a full `field_path`. Component state/value snapshots use dotted paths such as `start.x`; constructors, copies, moves, by-value calls and returns carry all descendant fields. Aggregate summaries refresh from children toward ancestors. Moving a leaf or substruct restricts whole-value access to ancestors, while disjoint siblings remain available. Field or substruct assignment restores availability when every required descendant is initialized. Ancestor state transitions are included in ESIR.
 

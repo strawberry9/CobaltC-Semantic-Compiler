@@ -4,6 +4,7 @@ Field cells are authoritative at CFG joins. Root initialization is a summary,
 never permission to read an uninitialized component.
 """
 from .dataflow import Cell, Fact, snapshot
+from .semantic import is_pointer
 
 
 class StructAnalysis:
@@ -16,6 +17,7 @@ class StructAnalysis:
         places = {p['id'] for p in fn['places']}
         self.children = {pid: analyzer.lowerer.component_paths(pid) for pid in analyzer.lowerer.components if pid in places}
         self.parents = {p['id']: p['parent'] for p in fn['places'] if p.get('parent')}
+        self.borrow_analysis = None
 
     def root_for(self, op):
         first = next(iter(op['operands']), None)
@@ -264,7 +266,8 @@ class StructAnalysis:
                     pid = self.children[root][name]['id']; previous = state[pid]
                     constant = field.constant if definite or previous.constant == field.constant else None
                     state[pid] = Cell(frozenset({'Initialized'}) if definite else previous.states | {'Initialized'},
-                                      constant, field.objects if definite else previous.objects | field.objects)
+                                      constant, field.objects if definite else previous.objects | field.objects,
+                                      field.capabilities if definite else previous.capabilities | field.capabilities)
                     if pid not in self.children and 'Initialized' in previous.states:
                         op['effects']['destruction'].append(f'destroy_previous_field_if_selected({args[0]},{root},{pid}) after successful RHS evaluation')
                     op['effects']['ownership'].append(f'transfer_field_if_selected({args[1]},{name},{root},{pid})')
@@ -285,9 +288,18 @@ class StructAnalysis:
                 'P8' if moved else 'P7', ['OWNERSHIP-005','OWNERSHIP-009','OWNERSHIP-010'] if moved else ['INITIALIZATION-001','INITIALIZATION-002'],
                 [root, *(children[name]['id'] for name, c in cells.items() if c.states != frozenset({'Initialized'}))])
             return Fact(False)
-        fields = tuple((name, Fact(True, cell.constant,
-            frozenset({f'object_{op["id"]}_field_{index}'}) if kind == 'copy' else cell.objects))
-            for index, (name, cell) in enumerate(cells.items()))
+        field_values=[]
+        for index,(name,cell) in enumerate(cells.items()):
+            capabilities=cell.capabilities
+            field_place=children[name]
+            if kind=='copy' and capabilities and is_pointer(self.place_types[field_place['id']]) and self.borrow_analysis is not None:
+                capabilities=frozenset(self.borrow_analysis.create(
+                    op,self.borrow_analysis.caps[cid]['referent'],'SharedRead',cid)
+                    for cid in sorted(capabilities))
+            field_values.append((name, Fact(True, cell.constant,
+                frozenset({f'object_{op["id"]}_field_{index}'}) if kind == 'copy' else cell.objects,
+                capabilities)))
+        fields=tuple(field_values)
         objects = frozenset({f'object_{op["id"]}'}) if kind == 'copy' else whole.objects
         op['attributes']['result_ownership'] = 'Unowned' if kind == 'read' else 'Owned'
         op['attributes']['result_field_states'] = {
@@ -350,7 +362,7 @@ class StructAnalysis:
             rhs = facts[op['operands'][1]]
             for name, fact in rhs.fields:
                 field = self.children[root][name]['id']
-                state[field] = Cell(frozenset({'Initialized'}), fact.constant, fact.objects)
+                state[field] = Cell(frozenset({'Initialized'}), fact.constant, fact.objects, fact.capabilities)
                 op['facts_established'].extend([f'initialized({field})', f'owns({field})'])
                 op['effects']['initialization'].append(f'initialize_field({root},{field})')
             if op['kind'] == 'assign':

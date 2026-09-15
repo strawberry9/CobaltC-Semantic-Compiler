@@ -82,6 +82,7 @@ class Analyzer:
         borrows = BorrowAnalysis(self, fn)
         structs = StructAnalysis(self, fn)
         borrows.structs = structs
+        structs.borrow_analysis = borrows
         blocks={b['id']:b for b in fn['blocks']}; places={p['id']:p for p in fn['places']}
         values={v['id']:v for v in fn['values']}; facts={}
         producers={result:op for block in fn['blocks'] for op in block['operations'] for result in op['results']}
