@@ -68,6 +68,8 @@ The compiler validates every output against the **supplied schema** and checks e
 
 ## Read ESIR in your browser
 
+![Project Logo](images/Coby_small.png)
+
 Generate a standalone HTML report:
 
 ```sh
